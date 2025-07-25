@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebVerse - Modern Projects</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background: #2575fc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.3s;
+    }
+    nav a:hover {
+      transform: scale(1.1);
+      text-decoration: underline;
+    }
+    section { padding: 40px 20px; text-align: center; }
+    .zoom-btn {
+      padding: 10px 20px;
+      background: #2575fc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      margin-top: 10px;
+    }
+    .zoom-btn:hover { transform: scale(1.1); background: #1a5cd3; }
+    .project-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .project-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 300px;
+    }
+    .project-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    input, textarea {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>WebVerse 🌐</h1>
+  <nav>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="about">
+  <h2>About</h2>
+  <p>Welcome to WebVerse — a portfolio of real-world interactive web apps made using HTML, CSS, and JavaScript.</p>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="project-grid">
+    <div class="project-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/4361/4361139.png" />
+      <h3>To-Do App</h3>
+      <p>Manage tasks with sign-up/login and localStorage.</p>
+      <button class="zoom-btn" onclick="showSection('todo')">Open To-Do App</button>
+    </div>
+    <div class="project-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891419.png" />
+      <h3>Product Page</h3>
+      <p>Browse, filter, and simulate shopping with cart & tracking.</p>
+      <button class="zoom-btn" onclick="showSection('products')">Open Product Page</button>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact Me</h2>
+  <form onsubmit="handleContact(event)">
+    <input type="text" placeholder="Your Name" required /><br>
+    <input type="email" placeholder="Your Email" required /><br>
+    <textarea placeholder="Your Message" required></textarea><br>
+    <button class="zoom-btn">Send Message</button>
+    <p id="confirmation" style="color: green; font-weight: bold;"></p>
+  </form>
+</section>
+
+<!-- TO-DO APP SECTION -->
+<section id="todo" class="hidden">
+  <h2>To-Do App</h2>
+  <form onsubmit="return addTask(event)">
+    <input type="text" id="taskInput" placeholder="Enter task" required />
+    <button class="zoom-btn" type="submit">Add Task</button>
+  </form>
+  <ul id="taskList"></ul>
+  <p id="message" style="color: green;"></p>
+  <button class="zoom-btn" onclick="backHome()">Back to Home</button>
+</section>
+
+<!-- PRODUCTS SECTION -->
+<section id="products" class="hidden">
+  <h2>Product Shop</h2>
+  <div id="productList" style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;"></div>
+  <h3>Your Cart:</h3>
+  <ul id="cart"></ul>
+  <button class="zoom-btn" onclick="checkout()">Checkout</button>
+  <p id="orderStatus" style="color:green; font-weight:bold;"></p>
+  <button class="zoom-btn" onclick="backHome()">Back to Home</button>
+</section>
+
+<footer>
+  <p>© 2025 WebVerse. All rights reserved.</p>
+</footer>
+
+<script>
+  function handleContact(e) {
+    e.preventDefault();
+    document.getElementById("confirmation").textContent = "Message sent! We'll get in touch soon.";
+    setTimeout(() => {
+      document.getElementById("confirmation").textContent = "";
+    }, 3000);
+  }
+
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function backHome() {
+    document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+    document.getElementById('about').classList.remove('hidden');
+    document.getElementById('projects').classList.remove('hidden');
+    document.getElementById('contact').classList.remove('hidden');
+  }
+
+  // TO-DO APP
+  function addTask(e) {
+    e.preventDefault();
+    const task = document.getElementById("taskInput").value.trim();
+    if (!task) return;
+    const li = document.createElement("li");
+    li.textContent = task;
+    li.onclick = () => {
+      li.classList.toggle("done");
+      checkTasks();
+    };
+    document.getElementById("taskList").appendChild(li);
+    document.getElementById("taskInput").value = "";
+    saveTasks();
+  }
+
+  function checkTasks() {
+    const all = document.querySelectorAll("#taskList li");
+    const done = document.querySelectorAll("#taskList li.done");
+    document.getElementById("message").textContent =
+      all.length && all.length === done.length ? "✅ All tasks completed!" : "";
+  }
+
+  function saveTasks() {
+    const tasks = [...document.querySelectorAll("#taskList li")].map(li => ({
+      text: li.textContent,
+      done: li.classList.contains("done")
+    }));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
+  function loadTasks() {
+    const saved = JSON.parse(localStorage.getItem("tasks") || "[]");
+    saved.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t.text;
+      if (t.done) li.classList.add("done");
+      li.onclick = () => {
+        li.classList.toggle("done");
+        checkTasks();
+        saveTasks();
+      };
+      document.getElementById("taskList").appendChild(li);
+    });
+  }
+  loadTasks();
+
+  // PRODUCT SECTION
+  const products = [
+    { name: "Bluetooth Mouse", price: 499 },
+    { name: "Gaming Headphones", price: 999 },
+    { name: "Laptop Stand", price: 799 }
+  ];
+  const cart = [];
+
+  function renderProducts() {
+    const container = document.getElementById("productList");
+    products.forEach((p, index) => {
+      const div = document.createElement("div");
+      div.style.border = "1px solid #ccc";
+      div.style.padding = "10px";
+      div.style.borderRadius = "8px";
+      div.style.width = "200px";
+      div.innerHTML = `
+        <h4>${p.name}</h4>
+        <p>Price: ₹${p.price}</p>
+        <button class="zoom-btn" onclick="addToCart(${index})">Add to Cart</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addToCart(index) {
+    cart.push(products[index]);
+    updateCart();
+  }
+
+  function updateCart() {
+    const ul = document.getElementById("cart");
+    ul.innerHTML = "";
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - ₹${item.price}`;
+      ul.appendChild(li);
+    });
+  }
+
+  function checkout() {
+    if (!cart.length) return alert("Cart is empty!");
+    document.getElementById("orderStatus").textContent = "✅ Payment successful. Order placed!";
+    cart.length = 0;
+    updateCart();
+    setTimeout(() => document.getElementById("orderStatus").textContent = "", 4000);
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>
