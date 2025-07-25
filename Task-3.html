@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuizVerse - Where Curiosity Clicks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      color: #333;
+    }
+    header {
+      background: #3f72af;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    h1 { margin: 0; font-size: 36px; }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .category {
+      background: #112d4e;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .category:hover {
+      background: #3f72af;
+      transform: scale(1.05);
+    }
+    .quiz-section { display: none; margin-top: 30px; }
+    #options-box button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      background: #3f72af;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #options-box button:hover { background: #2c5282; transform: scale(1.05); }
+    #score { font-weight: bold; margin-top: 10px; }
+    #result { margin-top: 10px; font-style: italic; }
+    img { max-width: 100%; border-radius: 8px; margin-bottom: 20px; }
+    .joke-section {
+      margin-top: 40px;
+      padding: 20px;
+      background: #fff;
+      border-left: 5px solid #3f72af;
+      border-radius: 6px;
+    }
+    .joke-section button {
+      background: #3f72af;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .joke-section button:hover { background: #2c5282; }
+    @media (max-width: 600px) {
+      h1 { font-size: 28px; }
+      .category { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QuizVerse 🚀</h1>
+    <p>Choose your quiz, test your brain, laugh a little!</p>
+  </header>
+
+  <div class="container">
+    <!-- Category Selection -->
+    <div id="category-section">
+      <h2>Select a Quiz Category:</h2>
+      <div class="category-grid">
+        <div class="category" onclick="startQuiz('gk')">🧠 General Knowledge</div>
+        <div class="category" onclick="startQuiz('movies')">🎬 Movies</div>
+        <div class="category" onclick="startQuiz('series')">📺 Series</div>
+        <div class="category" onclick="startQuiz('tech')">🔬 Science & Tech</div>
+      </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quiz-section" class="quiz-section">
+      <h2 id="quiz-title"></h2>
+      <img id="quiz-image" src="" alt="Category Image">
+      <div id="question-box">Loading question...</div>
+      <div id="options-box"></div>
+      <div id="result"></div>
+      <div id="score">Score: 0</div>
+      <button onclick="nextQuestion()">Next Question</button>
+      <button onclick="goHome()">Back to Categories</button>
+    </div>
+
+    <!-- Joke Section -->
+    <div class="joke-section">
+      <h2>🤣 Need a Laugh?</h2>
+      <button onclick="getJoke()">Tell Me a Joke</button>
+      <p id="joke-text">Click the button to fetch a programming joke!</p>
+    </div>
+  </div>
+
+  <script>
+    const quizzes = {
+      gk: {
+        title: "General Knowledge",
+        image: "https://via.placeholder.com/600x200?text=General+Knowledge",
+        questions: [
+          { q: "Capital of Australia?", options: ["Sydney", "Canberra", "Melbourne"], answer: 1 },
+          { q: "Who wrote 'Romeo and Juliet'?", options: ["Twain", "Shakespeare", "Austen"], answer: 1 },
+          { q: "Continents count?", options: ["6", "7", "8"], answer: 1 },
+          { q: "Largest ocean?", options: ["Atlantic", "Pacific", "Indian"], answer: 1 },
+          { q: "Currency of Japan?", options: ["Won", "Yen", "Renminbi"], answer: 1 }
+        ]
+      },
+      movies: {
+        title: "Movies",
+        image: "https://via.placeholder.com/600x200?text=Movies",
+        questions: [
+          { q: "Director of Titanic?", options: ["James Cameron", "Nolan", "Spielberg"], answer: 0 },
+          { q: "Endgame release year?", options: ["2018", "2019", "2020"], answer: 1 },
+          { q: "Joker Oscar winner?", options: ["Ledger", "Phoenix", "Leto"], answer: 1 },
+          { q: "'Forrest Gump' actor?", options: ["Cruise", "Damon", "Hanks"], answer: 2 },
+          { q: "Movie with blue aliens?", options: ["Avatar", "Interstellar", "Tron"], answer: 0 }
+        ]
+      },
+      series: {
+        title: "Series",
+        image: "https://via.placeholder.com/600x200?text=TV+Series",
+        questions: [
+          { q: "Iron Throne belongs to?", options: ["Witcher", "GoT", "House of Cards"], answer: 1 },
+          { q: "'Stranger Things' decade?", options: ["80s", "90s", "2000s"], answer: 0 },
+          { q: "Sherlock actor?", options: ["Cumberbatch", "Hardy", "Smith"], answer: 0 },
+          { q: "Breaking Bad lead?", options: ["White", "Saul", "Hank"], answer: 0 },
+          { q: "'Friends' city?", options: ["LA", "Chicago", "NYC"], answer: 2 }
+        ]
+      },
+      tech: {
+        title: "Science & Tech",
+        image: "https://via.placeholder.com/600x200?text=Science+%26+Tech",
+        questions: [
+          { q: "HTML stands for?", options: ["HyperText", "Machine", "Script"], answer: 0 },
+          { q: "Fastest planet orbit?", options: ["Mercury", "Earth", "Mars"], answer: 0 },
+          { q: "Founder of Microsoft?", options: ["Jobs", "Gates", "Musk"], answer: 1 },
+          { q: "First language?", options: ["C", "Python", "FORTRAN"], answer: 2 },
+          { q: "Smallest data unit?", options: ["Bit", "Byte", "Kb"], answer: 0 }
+        ]
+      }
+    };
+
+    let currentQuiz = null;
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz(category) {
+      currentQuiz = quizzes[category];
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("quiz-title").textContent = currentQuiz.title;
+      document.getElementById("quiz-image").src = currentQuiz.image;
+      document.getElementById("score").textContent = "Score: 0";
+      document.getElementById("category-section").style.display = "none";
+      document.getElementById("quiz-section").style.display = "block";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = currentQuiz.questions[currentQuestion];
+      document.getElementById("question-box").textContent = `Q${currentQuestion + 1}: ${q.q}`;
+      const optionsBox = document.getElementById("options-box");
+      optionsBox.innerHTML = "";
+      q.options.forEach((opt, i) => {
+                const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(i);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correct = currentQuiz.questions[currentQuestion].answer;
+      const result = document.getElementById("result");
+      if (selected === correct) {
+        score++;
+        result.textContent = "✅ Correct!";
+      } else {
+        result.textContent = `❌ Wrong! Correct answer: ${currentQuiz.questions[currentQuestion].options[correct]}`;
+      }
+      document.getElementById("score").textContent = `Score: ${score}`;
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      document.getElementById("result").textContent = "";
+      if (currentQuestion < currentQuiz.questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("question-box").textContent = "🎉 Quiz Complete!";
+        document.getElementById("options-box").innerHTML = "";
+        document.getElementById("score").textContent += " Final Score!";
+      }
+    }
+
+    function goHome() {
+      document.getElementById("quiz-section").style.display = "none";
+      document.getElementById("category-section").style.display = "block";
+      document.getElementById("result").textContent = "";
+    }
+
+    async function getJoke() {
+      const jokeText = document.getElementById("joke-text");
+      jokeText.textContent = "Fetching joke...";
+      try {
+        const res = await fetch("https://v2.jokeapi.dev/joke/Programming?type=single");
+        const data = await res.json();
+        jokeText.textContent = `💬 ${data.joke}`;
+      } catch (error) {
+        jokeText.textContent = "Oops! Couldn't fetch a joke. Try again later.";
+      }
+    }
+  </script>
+</body>
+</html>
