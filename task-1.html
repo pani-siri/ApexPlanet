@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dream Starter</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 700px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #00c9ff, #92fe9d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: #e0e0e0;
+    }
+
+    img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    img:hover {
+      transform: scale(1.05);
+    }
+
+    a {
+      color: #00c9ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(255, 75, 43, 0.4);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>✨ Dream Starter ✨</h1>
+    <p>Welcome to your first step in web development. Let's build something awesome together!</p>
+    
+    <!-- ✅ WORKING IMAGE -->
+    <img src="https://picsum.photos/seed/webdev/400/250" alt="Creative Web Image">
+    
+    <p>Want to learn more? Check out <a href="https://developer.mozilla.org/" target="_blank">MDN Web Docs</a>.</p>
+    <button onclick="sayHello()">Let's Begin 🚀</button>
+  </div>
+
+  <script>
+    function sayHello() {
+      const name = prompt("Hey there! What's your name?");
+      if (name) {
+        alert("Welcome, " + name + "! Let’s make something incredible today! 💻");
+      } else {
+        alert("Welcome, creator! The web is your playground 🌍");
+      }
+    }
+  </script>
+
+</body>
+</html>
