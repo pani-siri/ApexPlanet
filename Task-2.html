@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart To-Do</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #0066ff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #004ecb;
+    }
+
+    ul {
+      margin-top: 15px;
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #f0f8ff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    li.done {
+      text-decoration: line-through;
+      background-color: #caffbf;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="signupContainer">
+  <h2>Sign Up</h2>
+  <form onsubmit="return handleSignup(event)">
+    <input type="text" id="signupName" placeholder="Your Name" required />
+    <input type="email" id="signupEmail" placeholder="Email" required />
+    <input type="password" id="signupPassword" placeholder="Password" required minlength="6"/>
+    <button type="submit">Sign Up</button>
+  </form>
+</div>
+
+<div class="container" id="loginContainer" style="display: none;">
+  <h2>Login</h2>
+  <form onsubmit="return handleLogin(event)">
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
+    <button type="submit">Login</button>
+  </form>
+</div>
+
+<div class="container" id="todoContainer" style="display: none;">
+  <h2 id="todoHeader">Your Tasks</h2>
+  <form onsubmit="return addTask(event)">
+    <input type="text" id="taskInput" placeholder="Enter task" required />
+    <button type="submit">Add Task</button>
+  </form>
+  <ul id="taskList"></ul>
+  <div id="message"></div>
+</div>
+
+<script>
+  let user = {};
+
+  function handleSignup(e) {
+    e.preventDefault();
+    const name = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email.");
+      return false;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return false;
+    }
+
+    user = { name, email, password };
+    alert("Signup successful! Please login.");
+
+    document.getElementById("signupContainer").style.display = "none";
+    document.getElementById("loginContainer").style.display = "block";
+    return false;
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    if (email === user.email && password === user.password) {
+      document.getElementById("loginContainer").style.display = "none";
+      document.getElementById("todoContainer").style.display = "block";
+      document.getElementById("todoHeader").innerText = `${user.name}'s To-Do List`;
+    } else {
+      alert("Invalid credentials!");
+    }
+
+    return false;
+  }
+
+  function addTask(e) {
+    e.preventDefault();
+    const taskInput = document.getElementById("taskInput");
+    const task = taskInput.value.trim();
+    if (!task) return;
+
+    const li = document.createElement("li");
+    li.innerText = task;
+    li.onclick = () => {
+      li.classList.toggle("done");
+      checkCompletion();
+    };
+
+    document.getElementById("taskList").appendChild(li);
+    taskInput.value = "";
+  }
+
+  function checkCompletion() {
+    const tasks = document.querySelectorAll("#taskList li");
+    const doneTasks = document.querySelectorAll("#taskList li.done");
+    const msg = document.getElementById("message");
+
+    if (tasks.length && tasks.length === doneTasks.length) {
+      msg.innerText = `🎉 Great job, ${user.name}! You’ve completed all your tasks.`;
+      msg.style.display = "block";
+    } else {
+      msg.style.display = "none";
+    }
+  }
+</script>
+
+</body>
+</html>
